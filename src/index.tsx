@@ -1,8 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
+import Constants from "../../../src/configs/Const"
+import Text from "../../../src/elements/Text/index"
+import { MaterialIcons } from '@expo/vector-icons';
+import {theme} from "../../../src/configs/themes"
 import {
   View,
-  Text,
   StyleSheet,
   Animated,
   TouchableWithoutFeedback,
@@ -49,6 +52,13 @@ interface DefaultStepIndicatorStyles {
     | undefined;
   currentStepLabelColor: string;
   labelFontFamily?: string;
+  updateMessage?: string;
+  updateMessageSize?: number;
+  updateMessageFont?: string;
+  updateMessageColor?: string;
+  updateStatusSize?: number;
+  updateStatusFont?: string;
+  updateStatusColor?: string;
 }
 
 const defaultStyles: DefaultStepIndicatorStyles = {
@@ -201,12 +211,20 @@ const StepIndicator = ({
   };
 
   const renderStepIndicator = () => {
-    let steps = [];
-    for (let position = 0; position < stepCount; position++) {
+    let steps: any = [];
+    labels.map((item:any, idx) => {
+      let icon;
+      if (idx === currentPosition) {
+        icon = <MaterialIcons name='access-time' color={theme.colors.Blue} size={Constants.width * 0.075}/>
+
+      } else if (item.status === "Incomplete") {
+        icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
+      } else if (item.status === "Pending") {
+        icon = <MaterialIcons name='access-time' color={theme.colors.Grey} size={Constants.width * 0.075}/>
+      }
       steps.push(
         <TouchableWithoutFeedback
-          key={position}
-          onPress={() => stepPressed(position)}
+          key={idx}
         >
           <View
             style={[
@@ -216,11 +234,12 @@ const StepIndicator = ({
                 : { flexDirection: 'row' },
             ]}
           >
-            {renderStep(position)}
+            <View style={{backgroundColor: 'white'}}>{icon}</View>
+           
           </View>
         </TouchableWithoutFeedback>
       );
-    }
+    })
     return (
       <View
         onLayout={(event) => {
@@ -249,11 +268,26 @@ const StepIndicator = ({
     if (!labels || labels.length === 0) {
       return;
     }
-    var labelViews = labels.map((label, index) => {
+    var labelViews = labels.map((label: any, index) => {
       const selectedStepLabelStyle =
         index === currentPosition
           ? { color: customStyles.currentStepLabelColor }
           : { color: customStyles.labelColor };
+
+          // Message for each report label
+          const reportStatus: string = label.status;
+          const reportStatusMsg: string = label.statusMessage;
+
+          // Colour for each report label
+          let labelColor: string = theme.colors.Grey;
+          if (index === currentPosition) {
+            labelColor = theme.colors.Blue
+          } else if (reportStatus === "Incomplete") {
+            labelColor = theme.colors.Error
+          } else if (reportStatus === "Pending") {
+            labelColor = theme.colors.Grey
+          }
+
       return (
         <TouchableWithoutFeedback
           style={styles.stepLabelItem}
@@ -269,6 +303,14 @@ const StepIndicator = ({
                 currentPosition,
               })
             ) : (
+              <View style={{
+                display: 'flex', 
+              flexDirection: 'row', 
+              //backgroundColor: 'yellow', 
+              width: Constants.width * 0.6,
+              justifyContent: 'space-between',
+              alignItems: 'center'
+              }}>
               <Text
                 style={[
                   styles.stepLabel,
@@ -276,11 +318,29 @@ const StepIndicator = ({
                   {
                     fontSize: customStyles.labelSize,
                     fontFamily: customStyles.labelFontFamily,
+                    color: labelColor
                   },
                 ]}
               >
-                {label}
+                {label.report}
               </Text>
+              <View style={{alignItems: 'flex-start', flex: 1}}>
+                <Text style={{
+                  fontSize: customStyles.updateStatusSize, 
+                  fontFamily: customStyles.updateStatusFont, 
+                  color: labelColor, 
+                  marginLeft: 5}}>
+                  {reportStatus}
+                  </Text>
+                <Text style={{
+                  fontSize: customStyles.updateMessageSize, 
+                  fontFamily: customStyles.updateMessageFont, 
+                  color: labelColor, 
+                  marginLeft: 5}}>
+                  {reportStatusMsg}
+                  </Text>
+                </View>
+              </View>
             )}
           </View>
         </TouchableWithoutFeedback>
@@ -302,8 +362,9 @@ const StepIndicator = ({
     );
   };
 
+  
   const renderStep = (position: number) => {
-    let stepStyle;
+    let stepStyle:any;
     let indicatorLabelStyle: TextStyle = {};
     switch (getStepStatus(position)) {
       case STEP_STATUS.CURRENT: {
@@ -370,7 +431,7 @@ const StepIndicator = ({
             stepStatus: getStepStatus(position),
           })
         ) : (
-          <Text style={indicatorLabelStyle}>{`${position + 1}`}</Text>
+          <Text style={indicatorLabelStyle}>{5}</Text>
         )}
       </Animated.View>
     );
@@ -464,12 +525,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     fontWeight: '500',
+    width: Constants.width * 0.2,
   },
   stepLabelItem: {
-    flex: 1,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
 });
 
 export default React.memo(StepIndicator);
+
