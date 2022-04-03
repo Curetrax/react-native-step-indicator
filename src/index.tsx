@@ -178,8 +178,26 @@ const StepIndicator = ({
   };
 
   const renderProgressBar = () => {
+    const lengthLabels = labels.length
+    const lastReportStatus = labels[lengthLabels-1]['status']
+    const lastReportStatusMsg = labels[lengthLabels-1]['statusMessage']
+    let progressBarCol = theme.colors.Blue;
+    if (lastReportStatus === "Report Complete") {
+      progressBarCol = theme.colors.Success
+    } else if (lastReportStatus === "Late Report" && lastReportStatusMsg == "Please complete now") {
+      progressBarCol = theme.colors.Error
+    } else if (lastReportStatus === "Late Report") {
+      progressBarCol = theme.colors.Warning
+    }
+ else if (lastReportStatus === "Incomplete") {
+  progressBarCol = theme.colors.Blue
+    } else if (lastReportStatus === "Pending" || lastReportStatus === "Missed Report") {
+      progressBarCol = theme.colors.Grey
+    } 
+
+    console.log(lastReportStatus)
     let progressBarStyle: any = {
-      backgroundColor: theme.colors.Blue,
+      backgroundColor: progressBarCol,
       position: 'absolute',
     };
     if (direction === 'vertical') {
@@ -218,10 +236,10 @@ const StepIndicator = ({
         icon = <MaterialIcons name='check-circle-outline' color={theme.colors.Success} size={Constants.width * 0.08}/>
       } else if (item.status === "Late Report" && item.statusMessage == "Please complete now") {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
-      }
-      else if (idx === currentPosition) {
+      } else if (item.status === "Late Report") {
+        icon = <MaterialIcons name='error-outline' color={theme.colors.Warning} size={Constants.width * 0.075}/>
+      } else if (idx+1 === currentPosition) {
         icon = <MaterialIcons name='access-time' color={theme.colors.Blue} size={Constants.width * 0.075}/>
-
       } else if (item.status === "Incomplete") {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
       } else if (item.status === "Pending") {
@@ -291,8 +309,11 @@ const StepIndicator = ({
             labelColor = theme.colors.Success
           } else if (reportStatus === "Late Report" && reportStatusMsg == "Please complete now") {
             labelColor = theme.colors.Error
+          } 
+          else if (reportStatus === "Late Report") {
+            labelColor = theme.colors.Warning
           }
-          else if (index === currentPosition) {
+          else if (index + 1 === currentPosition) {
             labelColor = theme.colors.Blue
           } else if (reportStatus === "Incomplete") {
             labelColor = theme.colors.Error
