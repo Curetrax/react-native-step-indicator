@@ -179,7 +179,7 @@ const StepIndicator = ({
 
   const renderProgressBar = () => {
     let progressBarStyle: any = {
-      backgroundColor: customStyles.separatorFinishedColor,
+      backgroundColor: theme.colors.Blue,
       position: 'absolute',
     };
     if (direction === 'vertical') {
@@ -214,13 +214,20 @@ const StepIndicator = ({
     let steps: any = [];
     labels.map((item:any, idx) => {
       let icon;
-      if (idx === currentPosition) {
+      if (item.status == "Report Complete") {
+        icon = <MaterialIcons name='check-circle-outline' color={theme.colors.Success} size={Constants.width * 0.08}/>
+      } else if (item.status === "Late Report" && item.statusMessage == "Please complete now") {
+        icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
+      }
+      else if (idx === currentPosition) {
         icon = <MaterialIcons name='access-time' color={theme.colors.Blue} size={Constants.width * 0.075}/>
 
       } else if (item.status === "Incomplete") {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
       } else if (item.status === "Pending") {
         icon = <MaterialIcons name='access-time' color={theme.colors.Grey} size={Constants.width * 0.075}/>
+      } else if (item.status === "Missed Report") {
+        icon = <MaterialIcons name='error-outline' color={theme.colors.Grey} size={Constants.width * 0.075}/>
       }
       steps.push(
         <TouchableWithoutFeedback
@@ -280,13 +287,18 @@ const StepIndicator = ({
 
           // Colour for each report label
           let labelColor: string = theme.colors.Grey;
-          if (index === currentPosition) {
+          if (reportStatus === "Report Complete") {
+            labelColor = theme.colors.Success
+          } else if (reportStatus === "Late Report" && reportStatusMsg == "Please complete now") {
+            labelColor = theme.colors.Error
+          }
+          else if (index === currentPosition) {
             labelColor = theme.colors.Blue
           } else if (reportStatus === "Incomplete") {
             labelColor = theme.colors.Error
-          } else if (reportStatus === "Pending") {
+          } else if (reportStatus === "Pending" || reportStatus === "Missed Report") {
             labelColor = theme.colors.Grey
-          }
+          } 
 
       return (
         <TouchableWithoutFeedback
