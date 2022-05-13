@@ -193,7 +193,7 @@ const StepIndicator = ({
  else if (lastReportStatus === reportStatusConfig.upcomingReport.status.incomplete) {
   progressBarCol = theme.colors.Blue
     } else if (lastReportStatus === reportStatusConfig.upcomingReport.status.pendingMUlti || lastReportStatus === reportStatusConfig.veryLateReport.status.missedMulti) {
-      progressBarCol = theme.colors.Blue
+      progressBarCol = theme.colors.Grey
     } 
 
     let progressBarStyle: any = {
@@ -239,12 +239,12 @@ const StepIndicator = ({
         icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
       } else if (item.status === reportStatusConfig.lateReport.status.lateReport) {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Warning} size={Constants.width * 0.075}/>
+      } else if (item.status === reportStatusConfig.upcomingReport.status.pendingMUlti) {
+        icon = <MaterialIcons name='access-time' color={theme.colors.Grey} size={Constants.width * 0.075}/>
       } else if (idx+1 === currentPosition || item.indicator === reportStatusConfig.upcomingReport.indicator) {
         icon = <MaterialIcons name='access-time' color={theme.colors.Blue} size={Constants.width * 0.075}/>
       } else if (item.status === reportStatusConfig.upcomingReport.status.incomplete) {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
-      } else if (item.status === reportStatusConfig.upcomingReport.status.pendingMUlti) {
-        icon = <MaterialIcons name='access-time' color={theme.colors.Grey} size={Constants.width * 0.075}/>
       } else if (item.status === reportStatusConfig.veryLateReport.status.missedMulti) {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Grey} size={Constants.width * 0.075}/>
       }
@@ -304,6 +304,7 @@ const StepIndicator = ({
           const reportStatus: string = label.status;
           const reportStatusMsg: string = label.statusMessage;
           const reportIndicator: string = label.indicator
+          console.log(reportIndicator)
 
           // Colour for each report label
           let labelColor: string = theme.colors.Grey;
@@ -313,12 +314,12 @@ const StepIndicator = ({
             labelColor = theme.colors.Error
           } else if (reportStatus === reportStatusConfig.lateReport.status.lateReport) {
             labelColor = theme.colors.Warning
+          } else if (reportStatus === reportStatusConfig.upcomingReport.status.pendingMUlti || reportStatus === reportStatusConfig.veryLateReport.status.missedMulti) {
+            labelColor = theme.colors.Grey
           } else if (index + 1 === currentPosition || reportIndicator === reportStatusConfig.upcomingReport.indicator) {
             labelColor = theme.colors.Blue
           } else if (reportStatus === reportStatusConfig.upcomingReport.status.incomplete) {
             labelColor = theme.colors.Error
-          } else if (reportStatus === reportStatusConfig.upcomingReport.status.pendingMUlti || reportStatus === reportStatusConfig.veryLateReport.status.missedMulti) {
-            labelColor = theme.colors.Grey
           } 
 
       return (
@@ -568,4 +569,6 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(StepIndicator);
+
+
 
