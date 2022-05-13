@@ -193,7 +193,7 @@ const StepIndicator = ({
  else if (lastReportStatus === reportStatusConfig.upcomingReport.status.incomplete) {
   progressBarCol = theme.colors.Blue
     } else if (lastReportStatus === reportStatusConfig.upcomingReport.status.pendingMUlti || lastReportStatus === reportStatusConfig.veryLateReport.status.missedMulti) {
-      progressBarCol = theme.colors.Grey
+      progressBarCol = theme.colors.Blue
     } 
 
     let progressBarStyle: any = {
