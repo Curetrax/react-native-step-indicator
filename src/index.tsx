@@ -109,6 +109,9 @@ const StepIndicator = ({
     ...customStylesFromProps,
   });
 
+
+  // Controls color of progress bar
+  const progressBarColor = theme.colors.Blue
   const progressAnim = React.useRef(new Animated.Value(0)).current;
   const sizeAnim = React.useRef(
     new Animated.Value(customStyles.stepIndicatorSize)
@@ -138,7 +141,7 @@ const StepIndicator = ({
 
   const renderProgressBarBackground = () => {
     let progressBarBackgroundStyle: ViewStyle = {
-      backgroundColor: customStyles.separatorUnFinishedColor,
+      backgroundColor: progressBarColor,
       position: 'absolute',
     };
     if (direction === 'vertical') {
@@ -179,22 +182,22 @@ const StepIndicator = ({
   };
 
   const renderProgressBar = () => {
-    const lengthLabels = labels.length
-    const lastReportStatus = labels[lengthLabels-1]['status']
-    const lastReportStatusMsg = labels[lengthLabels-1]['statusMessage']
-    let progressBarCol = theme.colors.Blue;
-    if (lastReportStatus === reportStatusConfig.completedReport.status) {
-      progressBarCol = theme.colors.Success
-    } else if (lastReportStatus === reportStatusConfig.lateReport.status.lateReport && lastReportStatusMsg == reportStatusConfig.veryLateReport.statusMsg.singleLate) {
-      progressBarCol = theme.colors.Error
-    } else if (lastReportStatus === reportStatusConfig.lateReport.status.lateReport) {
-      progressBarCol = theme.colors.Warning
-    }
- else if (lastReportStatus === reportStatusConfig.upcomingReport.status.incomplete) {
-  progressBarCol = theme.colors.Blue
-    } else if (lastReportStatus === reportStatusConfig.upcomingReport.status.pendingMUlti || lastReportStatus === reportStatusConfig.veryLateReport.status.missedMulti) {
-      progressBarCol = theme.colors.Grey
-    } 
+    // const lengthLabels = labels.length
+    // const lastReportStatus = labels[lengthLabels-1]['status']
+    // const lastReportStatusMsg = labels[lengthLabels-1]['statusMessage']
+    let progressBarCol = progressBarColor;
+//     if (lastReportStatus === reportStatusConfig.completedReport.status) {
+//       progressBarCol = theme.colors.Success
+//     } else if (lastReportStatus === reportStatusConfig.lateReport.status.lateReport && lastReportStatusMsg == reportStatusConfig.veryLateReport.statusMsg.singleLate) {
+//       progressBarCol = theme.colors.Error
+//     } else if (lastReportStatus === reportStatusConfig.lateReport.status.lateReport) {
+//       progressBarCol = theme.colors.Warning
+//     }
+//  else if (lastReportStatus === reportStatusConfig.upcomingReport.status.incomplete) {
+//   progressBarCol = theme.colors.Blue
+//     } else if (lastReportStatus === reportStatusConfig.upcomingReport.status.pendingMUlti || lastReportStatus === reportStatusConfig.veryLateReport.status.missedMulti) {
+//       progressBarCol = theme.colors.Grey
+//     } 
 
     let progressBarStyle: any = {
       backgroundColor: progressBarCol,
@@ -233,21 +236,33 @@ const StepIndicator = ({
     labels.map((item:any, idx) => {
       console.log(item)
       let icon;
-      if (item.status == reportStatusConfig.completedReport.status) {
+      if (item.indicator == reportStatusConfig.completedReport.indicator) {
         icon = <MaterialIcons name='check-circle-outline' color={theme.colors.Success} size={Constants.width * 0.08}/>
-      } else if (item.status === reportStatusConfig.lateReport.status.lateReport && item.statusMessage == reportStatusConfig.veryLateReport.statusMsg.singleLate) {
-        icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
-      } else if (item.status === reportStatusConfig.lateReport.status.lateReport) {
+      } else if (item.indicator == reportStatusConfig.completeNowReport.indicator) {
+        icon = <MaterialIcons name='error-outline' color={theme.colors.Blue} size={Constants.width * 0.075}/>
+      } else if (item.indicator == reportStatusConfig.pastDueReport.indicator) {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Warning} size={Constants.width * 0.075}/>
-      } else if (item.status === reportStatusConfig.upcomingReport.status.pendingMUlti) {
+      } else if (item.indicator == reportStatusConfig.pendingReport.indicator) {
         icon = <MaterialIcons name='access-time' color={theme.colors.Grey} size={Constants.width * 0.075}/>
-      } else if (idx+1 === currentPosition || item.indicator === reportStatusConfig.upcomingReport.indicator) {
-        icon = <MaterialIcons name='access-time' color={theme.colors.Blue} size={Constants.width * 0.075}/>
-      } else if (item.status === reportStatusConfig.upcomingReport.status.incomplete) {
+      } else if (item.indicator == reportStatusConfig.missedReport.indicator) {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
-      } else if (item.status === reportStatusConfig.veryLateReport.status.missedMulti) {
-        icon = <MaterialIcons name='error-outline' color={theme.colors.Grey} size={Constants.width * 0.075}/>
       }
+      
+      
+      
+      // else if (item.status === reportStatusConfig.lateReport.status.lateReport && item.statusMessage == reportStatusConfig.veryLateReport.statusMsg.singleLate) {
+      //   icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
+      // } else if (item.status === reportStatusConfig.lateReport.status.lateReport) {
+      //   icon = <MaterialIcons name='error-outline' color={theme.colors.Warning} size={Constants.width * 0.075}/>
+      // } else if (item.status === reportStatusConfig.upcomingReport.status.pendingMUlti) {
+      //   icon = <MaterialIcons name='access-time' color={theme.colors.Grey} size={Constants.width * 0.075}/>
+      // } else if (idx+1 === currentPosition || item.indicator === reportStatusConfig.upcomingReport.indicator) {
+      //   icon = <MaterialIcons name='access-time' color={theme.colors.Blue} size={Constants.width * 0.075}/>
+      // } else if (item.status === reportStatusConfig.upcomingReport.status.incomplete) {
+      //   icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
+      // } else if (item.status === reportStatusConfig.veryLateReport.status.missedMulti) {
+      //   icon = <MaterialIcons name='error-outline' color={theme.colors.Grey} size={Constants.width * 0.075}/>
+      // }
       steps.push(
         <TouchableWithoutFeedback
           key={idx}
@@ -308,19 +323,17 @@ const StepIndicator = ({
 
           // Colour for each report label
           let labelColor: string = theme.colors.Grey;
-          if (reportStatus === reportStatusConfig.completedReport.status) {
+          if (reportIndicator === reportStatusConfig.completedReport.indicator) {
             labelColor = theme.colors.Success
-          } else if (reportStatus === reportStatusConfig.lateReport.status.lateReport && reportStatusMsg == reportStatusConfig.veryLateReport.statusMsg.singleLate) {
-            labelColor = theme.colors.Error
-          } else if (reportStatus === reportStatusConfig.lateReport.status.lateReport) {
-            labelColor = theme.colors.Warning
-          } else if (reportStatus === reportStatusConfig.upcomingReport.status.pendingMUlti || reportStatus === reportStatusConfig.veryLateReport.status.missedMulti) {
-            labelColor = theme.colors.Grey
-          } else if (index + 1 === currentPosition || reportIndicator === reportStatusConfig.upcomingReport.indicator) {
+          } else if (reportIndicator === reportStatusConfig.completeNowReport.indicator) {
             labelColor = theme.colors.Blue
-          } else if (reportStatus === reportStatusConfig.upcomingReport.status.incomplete) {
-            labelColor = theme.colors.Error
-          } 
+          } else if (reportIndicator === reportStatusConfig.pastDueReport.indicator) {
+            labelColor = theme.colors.Warning
+          } else if (reportIndicator === reportStatusConfig.pendingReport.indicator) {
+            labelColor = theme.colors.Grey
+          } else if (reportIndicator === reportStatusConfig.missedReport.indicator) {
+            labelColor = theme.colors.Grey
+          }
 
       return (
         <TouchableWithoutFeedback
@@ -569,6 +582,8 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(StepIndicator);
+
+
 
 
 
