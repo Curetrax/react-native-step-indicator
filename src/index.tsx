@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { StepIndicatorProps } from './types';
 import {reportStatusConfig} from "../../../src/utils/preSurveyConfig/reportStatusConfig"
+import {screenTheme} from "../../../src/configs/screenTheme"
 
 const STEP_STATUS = {
   CURRENT: 'current',
@@ -237,15 +238,15 @@ const StepIndicator = ({
       console.log(item)
       let icon;
       if (item.indicator == reportStatusConfig.completedReport.indicator) {
-        icon = <MaterialIcons name='check-circle-outline' color={theme.colors.Success} size={Constants.width * 0.08}/>
+        icon = <MaterialIcons name='check-circle-outline' color={theme.colors.Success} size={Constants.height < screenTheme.tabletPixelThreshold ? Constants.width * 0.08 : Constants.width * 0.06}/>
       } else if (item.indicator == reportStatusConfig.completeNowReport.indicator) {
-        icon = <MaterialIcons name='error-outline' color={theme.colors.Blue} size={Constants.width * 0.075}/>
+        icon = <MaterialIcons name='error-outline' color={theme.colors.Blue} size={Constants.height < screenTheme.tabletPixelThreshold ? Constants.width * 0.075 : Constants.width * 0.06}/>
       } else if (item.indicator == reportStatusConfig.pastDueReport.indicator) {
-        icon = <MaterialIcons name='error-outline' color={theme.colors.Warning} size={Constants.width * 0.075}/>
+        icon = <MaterialIcons name='error-outline' color={theme.colors.Warning} size={Constants.height < screenTheme.tabletPixelThreshold ? Constants.width * 0.075 : Constants.width * 0.06}/>
       } else if (item.indicator == reportStatusConfig.pendingReport.indicator) {
-        icon = <MaterialIcons name='access-time' color={theme.colors.Grey} size={Constants.width * 0.075}/>
+        icon = <MaterialIcons name='access-time' color={theme.colors.Grey} size={Constants.height < screenTheme.tabletPixelThreshold ? Constants.width * 0.075 : Constants.width * 0.06}/>
       } else if (item.indicator == reportStatusConfig.missedReport.indicator) {
-        icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.width * 0.075}/>
+        icon = <MaterialIcons name='error-outline' color={theme.colors.Error} size={Constants.height < screenTheme.tabletPixelThreshold ? Constants.width * 0.075 : Constants.width * 0.06}/>
       }
       
       
@@ -319,7 +320,6 @@ const StepIndicator = ({
           const reportStatus: string = label.status;
           const reportStatusMsg: string = label.statusMessage;
           const reportIndicator: string = label.indicator
-          console.log(reportIndicator)
 
           // Colour for each report label
           let labelColor: string = theme.colors.Grey;
@@ -552,7 +552,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: 'rgba(1,0,0,0)',
   },
   stepLabelsContainer: {
     justifyContent: 'space-around',
@@ -567,6 +566,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    width: Constants.height < screenTheme.tabletPixelThreshold ? undefined : '120%'
   },
   stepLabel: {
     fontSize: 12,
@@ -577,12 +577,11 @@ const styles = StyleSheet.create({
   stepLabelItem: {
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 });
 
 export default React.memo(StepIndicator);
-
 
 
 
