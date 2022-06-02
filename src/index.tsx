@@ -276,7 +276,7 @@ const StepIndicator = ({
                 : { flexDirection: 'row' },
             ]}
           >
-            <View style={{backgroundColor: 'white'}}>{icon}</View>
+            <View style={{backgroundColor: colors.card}}>{icon}</View>
            
           </View>
         </TouchableWithoutFeedback>
