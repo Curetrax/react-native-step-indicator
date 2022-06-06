@@ -13,8 +13,9 @@ import {
   TextStyle,
 } from 'react-native';
 import { StepIndicatorProps } from './types';
-import {reportStatusConfig} from "../../../src/utils/preSurveyConfig/reportStatusConfig"
+import {reportStatusConfig} from "../../../src/configs/reportConfigs/reportStatusConfig"
 import {screenTheme} from "../../../src/configs/screenTheme"
+import { useTheme } from '@react-navigation/native';
 
 const STEP_STATUS = {
   CURRENT: 'current',
@@ -100,6 +101,7 @@ const StepIndicator = ({
   renderStepIndicator: renderCustomStepIndicator,
   renderLabel,
 }: StepIndicatorProps) => {
+  const {colors, dark} = useTheme()
   const [width, setWidth] = React.useState<number>(0);
   const [height, setHeight] = React.useState<number>(0);
   const [progressBarSize, setProgressBarSize] = React.useState<number>(0);
@@ -112,7 +114,7 @@ const StepIndicator = ({
 
 
   // Controls color of progress bar
-  const progressBarColor = theme.colors.Blue
+  const progressBarColor = colors.primary
   const progressAnim = React.useRef(new Animated.Value(0)).current;
   const sizeAnim = React.useRef(
     new Animated.Value(customStyles.stepIndicatorSize)
@@ -235,10 +237,9 @@ const StepIndicator = ({
   const renderStepIndicator = () => {
     let steps: any = [];
     labels.map((item:any, idx) => {
-      console.log(item)
       let icon;
       if (item.indicator == reportStatusConfig.completedReport.indicator) {
-        icon = <MaterialIcons name='check-circle-outline' color={theme.colors.Success} size={Constants.height < screenTheme.tabletPixelThreshold ? Constants.width * 0.08 : Constants.width * 0.06}/>
+        icon = <MaterialIcons name='check-circle-outline' color={colors.success} size={Constants.height < screenTheme.tabletPixelThreshold ? Constants.width * 0.08 : Constants.width * 0.06}/>
       } else if (item.indicator == reportStatusConfig.completeNowReport.indicator) {
         icon = <MaterialIcons name='error-outline' color={theme.colors.Blue} size={Constants.height < screenTheme.tabletPixelThreshold ? Constants.width * 0.075 : Constants.width * 0.06}/>
       } else if (item.indicator == reportStatusConfig.pastDueReport.indicator) {
@@ -354,9 +355,9 @@ const StepIndicator = ({
                 display: 'flex', 
               flexDirection: 'row', 
               //backgroundColor: 'yellow', 
-              width: Constants.width * 0.6,
+              width: Constants.width * 0.5,
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
               }}>
               <Text
                 style={[
@@ -379,13 +380,13 @@ const StepIndicator = ({
                   marginLeft: 5}}>
                   {reportStatus}
                   </Text>
-                <Text style={{
+                {/* <Text style={{
                   fontSize: customStyles.updateMessageSize, 
                   fontFamily: customStyles.updateMessageFont, 
                   color: labelColor, 
                   marginLeft: 5}}>
-                  {reportStatusMsg}
-                  </Text>
+                  hi
+                  </Text> */}
                 </View>
               </View>
             )}
@@ -575,13 +576,15 @@ const styles = StyleSheet.create({
     width: Constants.width * 0.2,
   },
   stepLabelItem: {
-    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 });
 
 export default React.memo(StepIndicator);
+
+
+
 
 
 
